@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.color1{
+  color: lightskyblue;
+}
+.color2{
+  color: #EAF1FB;
+}
+.bg1{
+  background-color: lightskyblue;
+}
+.bg2{
+  background-color: #EAF1FB;
+}
+
+.css-13cymwt-control{
+  height: 48px;
+}
+
