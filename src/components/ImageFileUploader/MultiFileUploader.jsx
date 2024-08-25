@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import "./multiFileUploder.css";
 import { toast } from "react-toastify";
 import { MdDelete } from "react-icons/md";
-import { FaCloudDownloadAlt } from "react-icons/fa";
 import { CiFolderOn } from "react-icons/ci";
 import imageCompression from "browser-image-compression";
 import { FcAddImage } from "react-icons/fc";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 const MultiFileUploader = ({
 	label,
@@ -19,6 +19,7 @@ const MultiFileUploader = ({
 		height: "108px",
 		width: "100px",
 	},
+	setFileErrors
 }) => {
 	const [uploadedFiles, setUploadedFiles] = useState([]);
 
@@ -41,10 +42,11 @@ const MultiFileUploader = ({
 				maxWidthOrHeight: 1920,
 				useWebWorker: true,
 			});
+			setFileErrors("")
 			return compressedFile;
 		} catch (error) {
 			console.error("Error compressing the image:", error);
-			toast.error("Error compressing the image. Please try again.");
+			setFileErrors("Error compressing the image. Please try again.");
 			return file;
 		}
 	};
@@ -56,13 +58,13 @@ const MultiFileUploader = ({
 				if (fileError) {
 					switch (fileError.code) {
 						case "too-many-files":
-							toast.error("You can only upload a maximum of 1 file.");
+							setFileErrors("You can only upload a maximum of 1 file.");
 							break;
 						case "file-too-large":
-							toast.error("The file size should not exceed 1 MB.");
+							setFileErrors("The file size should not exceed 1 MB.");
 							break;
 						default:
-							toast.error("Error uploading file. Please try again.");
+							setFileErrors("Error uploading file. Please try again.");
 							break;
 					}
 				}
@@ -70,6 +72,7 @@ const MultiFileUploader = ({
 
 			if (acceptedFiles.length > 0) {
 				const compressedFile = await handleImageCompression(acceptedFiles[0]);
+				setFileErrors("")
 				setUploadedFiles([compressedFile]);
 				onFilesSelected([compressedFile], name);
 			}
@@ -80,8 +83,8 @@ const MultiFileUploader = ({
 	});
 
 	return (
-		<div style={{ height: height }} className="dropzone">
-			<div {...getRootProps()} className="mainDropzone dropZoneImage">
+		<div className="dropzone">
+			<div {...getRootProps()} className="mainDropzone ">
 				<input {...getInputProps()} />
 				<h4 style={{ opacity: 0.8 }} className="label">
 					{label}
@@ -120,20 +123,21 @@ const MultiFileUploader = ({
 								</li>
 								<li>
 									<div className="iconArea">
-										<FaCloudDownloadAlt
+										{/* <FaCloudDownloadAlt
 											onClick={() => {
 												const newTab = window.open(fileSource, "_blank");
 												if (!newTab) {
 													alert("Popup blocked. Please allow popups for file preview.");
 												}
 											}}
-										/>
-										<MdDelete
+										/> */}
+										<FaRegTrashAlt
 											onClick={() => {
 												setUploadedFiles([]);
 												deleteFileHandler(name, file);
 											}}
 											color="error"
+											className="text-red-600"
 										/>
 									</div>
 								</li>

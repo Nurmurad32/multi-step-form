@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import StepperComponent from '../components/StepperComponent/StepperComponent';
 import PDFUploader from '../components/ImageFileUploader/PDFUploader';
 
-const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, register, handleSubmit, errors, control, Controller, currentStep }) => {
+const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, register, handleSubmit, errors, control, Controller, currentStep, assetFiles }) => {
 
+    const [pdfErrors, setPDFErrors] = useState("");
     const handleFinalSubmit = (data) => {
         onSubmit(data); // Pass data to the parent component
     };
@@ -12,11 +13,11 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
         <>
             <StepperComponent currentStep={currentStep} />
             <div className=' bg-white p-3 shadow-sm shadow-blue-500 rounded'>
-                <p className='text-lg text-center font-bold py-8 text-gray-500'>Vessel Details</p>
+                <p className='text-xl text-center font-bold py-8 text-gray-500'>Vessel Details</p>
 
                 <form onSubmit={handleSubmit(handleFinalSubmit)}>
 
-                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[75%] mx-auto'>
+                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[90%] mx-auto'>
                         <div className='max-w-sm'>
                             <p className='mb-1 text-gray-500'>Vessel's Name<span className='text-red-600 font-bold'>*</span></p>
                             <input
@@ -69,11 +70,11 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                         </div>
                     </div>
 
-                    <div className='flex justify-center my-5'>
+                    <div className='flex justify-center my-10'>
                         <p className='p-2 bg2 font-bold text-gray-500'>Vessel Details</p>
                     </div>
 
-                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[75%] mx-auto'>
+                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[90%] mx-auto'>
                         <div className='max-w-sm'>
                             <p className='mb-1 text-gray-500'>Length<span className='text-red-600 font-bold'>*</span></p>
                             <input
@@ -105,7 +106,7 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                             {errors.vesselDepth && <span className="text-red-600">Vessel's Depth is required</span>}
                         </div>
                         <div className='max-w-sm'>
-                            <p className='mb-1 text-gray-500'>Whether navigable in turbulent waters of the Gulf?<span className='text-red-600 font-bold'>*</span></p>
+                            <p className='mb-1 text-gray-500 mt-6'>Whether navigable in turbulent waters of the Gulf?<span className='text-red-600 font-bold'>*</span></p>
                             <div className='flex justify-between'>
                                 <div className="sq-radio">
                                     <input type="radio" id="yes" value="YES" {...register('navigable', { required: true })} />
@@ -122,10 +123,10 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                         </div>
                     </div>
 
-                    <div className='flex justify-center my-5'>
+                    <div className='flex justify-center my-8'>
                         <p className='p-2 bg2 font-bold text-gray-500'>Features</p>
                     </div>
-                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[75%] mx-auto'>
+                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[90%] mx-auto'>
                         <div className='max-w-sm'>
                             <input type="checkbox" id="vhf" value="VHF" {...register('turbulentGolfFeatures')} />
                             <label htmlFor="vhf" className='ml-2'>VHF</label>
@@ -144,7 +145,7 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                         <hr />
                     </div>
 
-                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[75%] mx-auto items-center my-12'>
+                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[90%] mx-auto items-center my-12'>
                         <div className='max-w-sm'>
                             <p className='mb-1 text-gray-500'>Ship's Draft Chart<span className='text-red-600 font-bold'>*</span></p>
                             <PDFUploader
@@ -164,8 +165,10 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                                 onFilesSelected={(files) => handleFileSelected(files, 'routePermitLetter')}
                                 deleteFileHandler={(file) => deleteFileHandler('routePermitLetter', file)}
                                 name="routePermitLetter"
-                            />
-                            {errors.routePermitLetter && <span className="text-red-600">This field is required</span>}
+                                setPDFErrors={setPDFErrors}
+                                />
+                                
+                                {!assetFiles.routePermitLetter && pdfErrors && <small className="text-red-600">{pdfErrors}</small>}
                         </div>
                         <div className='max-w-sm'>
                             <p className='mb-1 text-gray-500'>Route Permit Duration<span className='text-red-600 font-bold'>*</span></p>
@@ -178,7 +181,7 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                             {errors.routePermitDuration && <span className="text-red-600">This field is required</span>}
                         </div>
                     </div>
-                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[75%] mx-auto items-center my-12'>
+                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[90%] mx-auto items-center my-12'>
                         <div className='max-w-sm'>
                             <p className='mb-1 text-gray-500'>Registration Certificate<span className='text-red-600 font-bold'>*</span></p>
                             <PDFUploader
@@ -187,8 +190,10 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                                 onFilesSelected={(files) => handleFileSelected(files, 'registrationCertificate')}
                                 deleteFileHandler={(file) => deleteFileHandler('registrationCertificate', file)}
                                 name="registrationCertificate"
-                            />
-                            {errors.registrationCertificate && <span className="text-red-600">This field is required</span>}
+                                setPDFErrors={setPDFErrors}
+                                />
+                                
+                                {!assetFiles.registrationCertificate && pdfErrors && <small className="text-red-600">{pdfErrors}</small>}
                         </div>
                         <div className='max-w-sm'>
                             <p className='mb-1 text-gray-500'>Registration Certificate No<span className='text-red-600 font-bold'>*</span></p>
@@ -201,7 +206,7 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                             {errors.registrationCertificateNo && <span className="text-red-600">This field is required</span>}
                         </div>
                     </div>
-                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[75%] mx-auto items-center my-12'>
+                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[90%] mx-auto items-center my-12'>
                         <div className='max-w-sm'>
                             <p className='mb-1 text-gray-500'>Insurance Certificate<span className='text-red-600 font-bold'>*</span></p>
                             <PDFUploader
@@ -210,8 +215,10 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                                 onFilesSelected={(files) => handleFileSelected(files, 'insuranceCertificate')}
                                 deleteFileHandler={(file) => deleteFileHandler('insuranceCertificate', file)}
                                 name="insuranceCertificate"
-                            />
-                            {errors.insuranceCertificate && <span className="text-red-600">This field is required</span>}
+                                setPDFErrors={setPDFErrors}
+                                />
+                                
+                                {!assetFiles.insuranceCertificate && pdfErrors && <small className="text-red-600">{pdfErrors}</small>}
                         </div>
                         <div className='max-w-sm'>
                             <p className='mb-1 text-gray-500'>Insurance Certificate No<span className='text-red-600 font-bold'>*</span></p>
@@ -234,7 +241,7 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                             {errors.insuranceValidity && <span className="text-red-600">This field is required</span>}
                         </div>
                     </div>
-                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[75%] mx-auto items-center my-12'>
+                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[90%] mx-auto items-center my-12'>
                         <div className='max-w-sm'>
                             <p className='mb-1 text-gray-500'>Survey Certificate<span className='text-red-600 font-bold'>*</span></p>
                             <PDFUploader
@@ -243,8 +250,10 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                                 onFilesSelected={(files) => handleFileSelected(files, 'surveyCertificate')}
                                 deleteFileHandler={(file) => deleteFileHandler('surveyCertificate', file)}
                                 name="surveyCertificate"
-                            />
-                            {errors.surveyCertificate && <span className="text-red-600">Survey Certificate are required</span>}
+                                setPDFErrors={setPDFErrors}
+                                />
+                                
+                                {!assetFiles.surveyCertificate && pdfErrors && <small className="text-red-600">{pdfErrors}</small>}
                         </div>
                         <div className='max-w-sm'>
                             <p className='mb-1 text-gray-500'>Survey Certificate No<span className='text-red-600 font-bold'>*</span></p>
@@ -267,7 +276,7 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                             {errors.surveyValidity && <span className="text-red-600">This field is required</span>}
                         </div>
                     </div>
-                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[75%] mx-auto items-center my-12'>
+                    <div className='grid grid-cols-1 gap-5 md:grid-cols-3 w-[90%] mx-auto items-center my-12'>
                         <div className='max-w-sm'>
                             <p className='mb-1 text-gray-500'>Conservancy Certificate<span className='text-red-600 font-bold'>*</span></p>
                             <PDFUploader
@@ -276,8 +285,10 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                                 onFilesSelected={(files) => handleFileSelected(files, 'conservancyCertificate')}
                                 deleteFileHandler={(file) => deleteFileHandler('conservancyCertificate', file)}
                                 name="conservancyCertificate"
+                                setPDFErrors={setPDFErrors}
                             />
-                            {errors.conservancyCertificate && <span className="text-red-600">Conservancy Certificate are required</span>}
+                            
+                            {!assetFiles.conservancyCertificate && pdfErrors && <small className="text-red-600">{pdfErrors}</small>}
                         </div>
                         <div className='max-w-sm'>
                             <p className='mb-1 text-gray-500'>Conservancy Certificate Validity<span className='text-red-600 font-bold'>*</span></p>
@@ -292,7 +303,7 @@ const VesselRegistration = ({ onSubmit, handleFileSelected, deleteFileHandler, r
                     </div>
 
                     <div className='flex justify-center my-5'>
-                        <button type="submit" className='btn btn-primary'>Submit</button>
+                        <button type="submit" className='btn btn-primary px-12 text-white'>Submit</button>
                     </div>
                 </form>
             </div>

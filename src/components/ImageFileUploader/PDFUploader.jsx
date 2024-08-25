@@ -4,7 +4,7 @@ import "./multiFileUploder.css";
 import { toast } from "react-toastify";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
-import { FaCloudDownloadAlt } from "react-icons/fa";
+import { FaCloudDownloadAlt, FaRegTrashAlt } from "react-icons/fa";
 import { CiFolderOn } from "react-icons/ci";
 
 const PDFUploader = ({
@@ -14,6 +14,7 @@ const PDFUploader = ({
 	deleteFileHandler,
 	name,
 	height = "200px",
+	setPDFErrors
 }) => {
 	const [uploadedFiles, setUploadedFiles] = useState([]);
 
@@ -33,15 +34,15 @@ const PDFUploader = ({
 					switch (fileError.code) {
 						case "too-many-files":
 							if (!tooManyFilesErrorEncountered) {
-								toast.error("You can only upload a maximum of 1 file.");
+								setPDFErrors("You can only upload a maximum of 1 file.");
 								tooManyFilesErrorEncountered = true;
 							}
 							break;
 						case "file-too-large":
-							toast.error("The file size should not exceed 1 MB.");
+							setPDFErrors("The file size should not exceed 1 MB.");
 							break;
 						default:
-							toast.error("Error uploading file. Please try again.");
+							setPDFErrors("Error uploading file. Please try again.");
 							break;
 					}
 				}
@@ -56,9 +57,10 @@ const PDFUploader = ({
 				
 				// Check for both MIME type and extension
 				if (fileType === "application/pdf" && fileExtension === "pdf") {
+					// setPDFErrors(" ")
 					return true;
 				} else {
-					toast.error(`Invalid file type or extension: ${fileType}, .${fileExtension}`);
+					setPDFErrors(`Invalid file type or extension: ${fileType}, .${fileExtension}`);
 					return false;
 				}
 			});
@@ -73,8 +75,8 @@ const PDFUploader = ({
 	});
 
 	return (
-		<div style={{ height: height }} className="dropzone">
-			<div {...getRootProps()} className="mainDropzone">
+		<div className="dropzone">
+			<div {...getRootProps()} className="mainDropzone dropZoneImage">
 				<input {...getInputProps()} />
 				<h4 style={{ opacity: 0.8 }} className="label">
 					{label}
@@ -91,7 +93,7 @@ const PDFUploader = ({
 								<li>
 									{isPDF ? (
 										<>
-											<div className="avatar">
+											<div className="avatar flex justify-center">
 												<CiFolderOn />
 											</div>
 											<p style={{ fontSize: "10px", width: "100px" }}>
@@ -104,15 +106,15 @@ const PDFUploader = ({
 								</li>
 								<li>
 									<div className="iconArea">
-										<FaCloudDownloadAlt
+										{/* <FaCloudDownloadAlt
 											onClick={() => {
 												const newTab = window.open(URL.createObjectURL(file), "_blank");
 												if (!newTab) {
 													alert("Popup blocked. Please allow popups for file preview.");
 												}
 											}}
-										/>
-										<MdDelete
+										/> */}
+										<FaRegTrashAlt
 											onClick={() => {
 												const newFiles = [...uploadedFiles];
 												newFiles.splice(index, 1);
@@ -120,6 +122,7 @@ const PDFUploader = ({
 												deleteFileHandler(name, file);
 											}}
 											color="error"
+											className="text-red-600"
 										/>
 									</div>
 								</li>

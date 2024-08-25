@@ -1,6 +1,7 @@
 .dropzone {
     width: 100%;
-    height: 200px;
+    /* height: 200px; */
+    height: 150px;
     border: 2px dotted #808080a3;
     border-radius: 12px;
     padding: 10px;
@@ -22,7 +23,7 @@
 }
 
 .dropZoneImage{
-    border: 10px solid #EAF1FB;
+    border: 14px solid #EAF1FB;
     border-radius: 10px;
 }
 
@@ -76,4 +77,5 @@
     justify-content: center;
     gap: 3px;
     border: 1px solid #80808047;
+    margin-top: 5px;
 }

@@ -177,6 +177,7 @@ const CompanyVesselManagement = () => {
                     control={control}
                     Controller={Controller}
                     currentStep={currentStep}
+                    assetFiles={assetFiles}
                 />
             )}
             {currentStep === 2 && (
@@ -190,6 +191,7 @@ const CompanyVesselManagement = () => {
                     control={control}
                     Controller={Controller}
                     currentStep={currentStep}
+                    assetFiles={assetFiles}
                 />
             )}
         </>
